@@ -1,0 +1,33 @@
+---
+version: "3.5"
+
+services:
+  install_site:
+    build: ./install_site
+    ports:
+      - 80:80
+    environment:
+      - DOMAIN=$DOMAIN
+      - EMAIL=$EMAIL
+    volumes:
+      - ./nginx.conf:/web/searxng.conf
+      - sites-availables:/sites-availables
+      - certs:/etc/letsencrypt
+
+  searxng:
+    image: searxng/searxng
+    restart: always
+    networks:
+      - default
+      - selfhost
+
+volumes:
+  sites-availables:
+    external: true
+  certs:
+    external: true
+
+networks:
+  default:
+  selfhost:
+    external: true
